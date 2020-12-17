@@ -1,1 +1,108 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
+namespace _1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Please enter the x value from 0 or 25 = ");
+            int x = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Please enter a operator from * or / ");
+            char op = Convert.ToChar(Console.ReadLine());
+
+            double pow;
+            double kat;
+            double f = 1;
+            double min;
+            double pay = 0;
+            int payopp = 2;
+            double payda = 0;
+            double result = 0;
+            double fresult = 0;
+
+
+            for (int i = 1; i < 31; i++)
+            {
+                result = 0;
+                kat = 4 * i - 1;
+                pow = 1;
+
+                for (int j1 = 0; j1 < (3 * i - 1); j1++)
+                {
+                    pow = pow * x;
+                }
+
+                f = 1;
+                for (int j2 = 1; j2 < (2 * i + 3); j2++)
+                {
+                    f = f * j2;
+                }
+                if (kat * pow < f)
+                {
+                    min = kat * pow;
+                }
+                else
+                {
+                    min = f;
+                }
+
+                if (op == '*')
+                {
+                    pay = min * payopp;
+                }
+                else
+                {
+                    pay = min / payopp;
+                }
+
+                double initial = 2 * i;
+
+                for (int j3 = 0; j3 < i + 1; j3++)
+                {
+                    double sum = 1;
+
+                    for (int j4 = 0; j4 < i + 1; j4++)
+                    {
+                        sum *= initial;
+                    }
+
+                    payda += sum;
+                    initial += 2;
+
+                }
+
+
+
+
+
+                result = (pay / payda);
+
+
+                if (i % 2 == 1)
+                {
+                    fresult = fresult + result;
+                }
+                else
+                {
+                    fresult = fresult - result;
+
+                }
+
+
+                payopp = payopp + 5;
+                payda = 0;
+                pay = 0;
+            }
+
+
+            Console.WriteLine(fresult);
+            Console.ReadKey();
+
+        }
+    }
+}
