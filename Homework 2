@@ -1,0 +1,274 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+using System.Threading.Tasks;
+
+
+namespace _2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string confirm;
+
+            do
+            {
+                //gerekli dizilerin oluşturulması
+                string[] deckofturn = { "A", "B", "C", "D" };
+                string[] deckofcolor = { "kirmizi", "mavi", "yesil" };
+                string[,] deckofcard = new string[9, 2];
+                int[] points = new int[10];
+
+
+                //rastgele Kart Türü seçimi
+                Random rndm = new Random();
+                int a = 0;
+                int b = 0;
+
+                //çeşitli değişkenler
+                int renk1 = 0, renk2 = 0, renk3 = 0;
+                int point = 0;
+                int c = 0;
+                int d = 0;
+
+                //kart destesi oluşturuldu
+                for (int i = 0; i < 9; i++)
+                {
+                    a = rndm.Next(0, 4);
+                    deckofcard[i, 0] = deckofturn[a];
+                    //Console.Write(kartDestesi[i,0]+" ");
+                    while (true)
+                    {
+                        b = rndm.Next(0, 3);
+                        if (b == 0 && renk1 < 3)
+                        {
+                           deckofcard[i, 1] = deckofcolor[0];
+                            renk1++;
+                            break;
+                        }
+                        if (b == 1 && renk2 < 3)
+                        {
+                            deckofcard[i, 1] = deckofcolor[1];
+                            renk2++;
+                            break;
+                        }
+                        if (b == 2 && renk3 < 3)
+                        {
+                           deckofcard[i, 1] = deckofcolor[2];
+                            renk3++;
+                            break;
+                        }
+                    }
+                    //Console.WriteLine(kartDestesi[i, 1]);
+                }
+
+                //desteniz
+
+                Console.Write("\nYour Randomly Generated Array: ");
+
+                for (int i = 0; i < 9; i++)
+                {
+                    if (deckofcard[i, 1] == "kirmizi")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write(deckofcard[i, 0]);
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    if (deckofcard[i, 1] == "yesil")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write(deckofcard[i, 0]);
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    if (deckofcard[i, 1] == "mavi")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write(deckofcard[i, 0]);
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                }
+                Console.WriteLine("\n");
+                //puan kuralları
+                for (int i = 0; i < 7; i++)//7 tane sıralı olucak
+                {
+                    //deste[i] = kartDestesi[i, 0] + "" + kartDestesi[i + 1, 0] + "" + kartDestesi[i + 2, 0];
+                    if (deckofcard[i, 0] == deckofcard[i + 1, 0] && deckofcard[i + 1, 0] == deckofcard[i + 2, 0])
+                    {
+                        if (deckofcard[i, 1] == deckofcard[i + 1, 1] && deckofcard[i + 1, 1] == deckofcard[i + 2, 1])
+                        {
+                            points[i] = 33;
+                            //Console.WriteLine(puanlar[i]);
+                        }
+                        else if (deckofcard[i, 1] != deckofcard[i + 1, 1] && deckofcard[i + 1, 1] != deckofcard[i + 2, 1] && deckofcard[i, 1] != deckofcard[i + 2, 1])
+                        {
+                            points[i] = 28;
+                            //Console.WriteLine(puanlar[i]);
+                        }
+                        else
+                        {
+                            points[i] = 22;
+                            //Console.WriteLine(puanlar[i]);
+                        }
+                    }
+                    else if (deckofcard[i, 0] != deckofcard[i + 1, 0] && deckofcard[i + 1, 0] != deckofcard[i + 2, 0] && deckofcard[i, 0] != deckofcard[i + 2, 0])
+                    {
+                        if (deckofcard[i, 1] == deckofcard[i + 1, 1] && deckofcard[i + 1, 1] == deckofcard[i + 2, 1])
+                        {
+                            points[i] = 18;
+                            //Console.WriteLine(puanlar[i]);
+                        }
+                        else if (deckofcard[i, 1] != deckofcard[i + 1, 1] && deckofcard[i + 1, 1] != deckofcard[i + 2, 1] && deckofcard[i, 1] != deckofcard[i + 2, 1])
+                        {
+                            points[i] = 16;
+                            //Console.WriteLine(puanlar[i]);
+                        }
+                        else
+                        {
+                            points[i] = 14;
+                            //Console.WriteLine(puanlar[i]);
+                        }
+                    }
+                    else
+                    {
+                        if (deckofcard[i, 1] != deckofcard[i + 1, 1] && deckofcard[i + 1, 1] != deckofcard[i + 2, 1] && deckofcard[i, 1] != deckofcard[i + 2, 1])
+                        {
+                            points[i] = 10;
+                            //Console.WriteLine(puanlar[i]);
+                        }
+                        else
+                        {
+                            points[i] = 0;
+                            //Console.WriteLine(puanlar[i]);
+                        }
+                    }
+                }
+
+                //puanlar toplandı
+                for (int i = 0; i < 9; i++)
+                {
+                    point = point + points[i];
+                }
+
+                //deste sırasına göre puanlama çıktısı
+                for (int i = 0; i < 21; i++)
+                {
+                    //Console.WriteLine(deste[i]);
+                    if (i % 3 == 0 && i > 0)
+                    {
+                        Console.Write(" " + points[c] + " points");
+                        Console.Write("\n");
+                        d -= 2;
+                        c++;
+                    }
+                    if (deckofcard[d, 1] == "kirmizi")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write(deckofcard[d, 0]);
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    if (deckofcard[d, 1] == "yesil")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write(deckofcard[d, 0]);
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    if (deckofcard[d, 1] == "mavi")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write(deckofcard[d, 0]);
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    d++;
+                    if (i == 20)
+                    {
+                        Console.Write(" " + points[6] + " points");
+                    }
+                }
+
+                Console.WriteLine("\n\nYou get {0} points !!!\n", point);
+                Console.Write("Please enter your name: ");
+                string name = Console.ReadLine();
+
+                //dosya okuma
+                string[] line = new string[2];
+                int counter = 0;
+                StreamReader f = new StreamReader("../../../HighScoreTable.txt");
+                while (true)
+                {
+                    string w = f.ReadLine();
+                    if (w == null || w == "") //diğer taraf boşsa atlıyor
+                        break;
+                    counter++;
+                }
+                f.BaseStream.Position = 0;
+                string[,] tablo = new string[2, counter];
+                for (int i = 0; i < tablo.Length; i++)
+                {
+                    string x;
+                    x = f.ReadLine();
+                    if (x == null || x == " ")
+
+                        break;
+                    line = x.Split(';');
+                    tablo[0, i] = line[0];
+                    tablo[1, i] = line[1];
+                }
+                f.Close();
+                for (int j = 0; j < tablo.Length / 2 - 1; j++)
+                {
+                    for (int j1 = j + 1; j1 < tablo.Length / 2; j1++)
+                    {
+                        if (Convert.ToInt32(tablo[1, j]) < Convert.ToInt32(tablo[1, j1]))
+                        {
+                            string tyr = tablo[1, j];
+                            tablo[1, j] = tablo[1, j1];
+                            tablo[1, j1] = tyr;
+
+                            string tyr1 = tablo[0, j];
+                            tablo[0, j] = tablo[0, j1];
+                            tablo[0, j1] = tyr1;
+                        }
+                    }
+                }
+
+                //Kontrol 
+                if (point > Convert.ToInt32(tablo[1, 9]))
+                {
+                    tablo[1, 9] = Convert.ToString(point); //kendi ismimizi atamak için tekrar aynı döngü
+                    tablo[0, 9] = name;
+                }
+                for (int j = 0; j < tablo.Length / 2 - 1; j++)
+                {
+                    for (int j1 = j + 1; j1 < tablo.Length / 2; j1++)
+                    {
+                        if (Convert.ToInt32(tablo[1, j]) < Convert.ToInt32(tablo[1, j1]))
+                        {
+                            string tyr = tablo[1, j];
+                            tablo[1, j] = tablo[1, j1]; //sayısalllar için
+                            tablo[1, j1] = tyr;
+
+                            string tyr1 = tablo[0, j];
+                            tablo[0, j] = tablo[0, j1]; //isimler için
+                            tablo[0, j1] = tyr1;
+                        }
+                    }
+                }
+
+                //dosya yazdırma
+                for (int h = 0; h < 10; h++)
+                {
+                    Console.WriteLine($"{tablo[0, h]} {tablo[1, h]}");
+                }
+                //Tekrar Oynama kısmı
+                Console.WriteLine();
+                Console.WriteLine("Do you want to play again? (Y/N) ");
+                confirm = Console.ReadLine();
+
+            } while (confirm == "Y");
+            Console.ReadKey();
+        }
+    }
+}
