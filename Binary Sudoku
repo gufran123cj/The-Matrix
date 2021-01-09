@@ -1,0 +1,2601 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
+
+
+namespace Binary_Sudoku_örnek_2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+
+            Random rnd = new Random();
+            double point = 0;
+            int a = rnd.Next(0, 2);
+            int a1 = rnd.Next(0, 10);
+            int a2 = rnd.Next(0, 2);
+            int a3 = rnd.Next(0, 2);
+            int a4 = rnd.Next(0, 2);
+            string[] pieces = { "0", "1" };
+            string[] pieces1 = { "1", "0" };
+            string[] pieces2 = { "0", "1" };
+            string[] pieces3 = { "1", "0" };
+            int[] numbers = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }; //for piece shapes
+            string[,] rtable = new string[9, 9];//random table for cursor movement
+            int x1, x2, y1, y2; //position of x and y
+            x1 = 1;
+            x2 = 38;
+            y1 = 1;
+            y2 = 19;
+            string[,] table = new string[9, 9]; //main array which has include "."
+            int y3 = 2;
+            int x3 = 3;
+            Console.SetCursorPosition(2, 2);
+            int b = rnd.Next(0, 2);
+            int b1 = rnd.Next(0, 10);
+            int b2 = rnd.Next(0, 2);
+            int b3 = rnd.Next(0, 2);
+            int b4 = rnd.Next(0, 2);
+            int piececounter = 0;
+            double finalscore = 0;
+
+            Console.ReadLine();
+
+            for (int i = x1; i < x2; i++) //decorating the board
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.SetCursorPosition(i, x1);
+                if (i == 13 || i == 25)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.Write("+");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                }
+
+                else
+                    Console.Write("-");
+                Console.SetCursorPosition(i, y2);
+                if (i == 13 || i == 25)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.Write("+");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                }
+
+                else
+                    Console.Write("-");
+                Thread.Sleep(10);
+            }
+
+            for (int i = y1; i <= y2; i++) //table y
+            {
+
+
+                Console.SetCursorPosition(y1, i);
+                if (i == y1 || i == 7 || i == y2 || i == 13)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.Write("+");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                }
+
+                else
+
+                    Console.Write("|");
+
+                Console.SetCursorPosition(x2 - 1, i);
+                if (i == y1 || i == y2)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.Write("+");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                }
+
+                else
+                    Console.Write("|");
+                Thread.Sleep(10);
+
+            }
+
+            y1 = 2;
+            for (int i = y1; i < y2; i++)
+            {
+                Console.SetCursorPosition(13, i);
+
+                Console.Write("|");
+
+                Console.SetCursorPosition(25, i);
+
+
+                Console.Write("|");
+
+
+                Thread.Sleep(10);
+
+
+            }
+            y1 = 7; y2 = 13;
+            for (int i = x1 + 1; i < x2; i++)
+            {
+
+                Console.SetCursorPosition(i, y1);
+                if (i == x2 - 1 || i == 13 || i == 25)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.Write("+");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                } //ara çizgiler
+
+                else
+                    Console.Write("-");
+                Console.SetCursorPosition(i, y2);
+                if (i == x2 - 1 || i == 13 || i == 25)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.Write("+");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                }
+
+                else
+                    Console.Write("-"); Thread.Sleep(10);
+
+            }
+            x1 = 3; int w = 1;
+            y2 = 1;
+            for (int i = x1; i < x2; i += 4) //table numbers
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.SetCursorPosition(i, 0);
+                Console.Write(w);
+                w++;
+                Thread.Sleep(50);
+
+            }
+            y1 = 2; w = 1; y2 = 20;
+            for (int i = y1; i < y2; i += 2)
+            {
+
+                Console.SetCursorPosition(0, i);
+                Console.Write(w);
+                w++;
+
+            }
+            int cursorx = 15, cursory = 14;   // position of cursor
+            ConsoleKeyInfo cki;               // requiWhite for readkey
+
+
+
+
+            for (int z = 0; z < table.GetLength(0); z++)//MAIN TABLE
+            {
+
+                Console.ForegroundColor = ConsoleColor.White;
+
+                for (int j = 0; j < table.GetLength(1); j++)
+                {
+                    Console.SetCursorPosition(x3, j * 2 + 2);
+                    table[z, j] = ".";
+                    Console.Write(table[z, j]);
+                    Thread.Sleep(10);
+
+                }
+                x3 += 4;
+                y3 += 4;
+                Thread.Sleep(10);
+            }
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.SetCursorPosition(45, 18);
+
+
+
+
+
+            int x = 45;
+            int x11 = 43;
+            int y = 5;
+            int y11 = 4;
+            int ydot = 5;
+            int xdot = 45;
+            string sentence = "B1NARY"; //TEXT
+            string sentence2 = "SUD0KU";
+            char[] text = new char[15];
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.SetCursorPosition(43, 4);
+            Console.WriteLine("+");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            for (int i = 0; i < sentence.Length; i++)
+            {
+                Console.SetCursorPosition(x, y11);
+
+                if (i == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write(sentence[i]);
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                }
+                else
+                {
+                    Console.Write(sentence[i]);
+
+                }
+                Console.SetCursorPosition(x11, y);
+                if (i == 3)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write(sentence2[i]);
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                }
+
+                else
+
+                    Console.Write(sentence2[i]);
+
+                Console.SetCursorPosition(x, ydot);
+                Console.WriteLine(".");
+                Console.SetCursorPosition(xdot, y);
+                Console.WriteLine(".");
+                y += 2;
+                x += 4;
+                Thread.Sleep(150);
+            }
+            x = 45;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.SetCursorPosition(43, 4);
+            Console.WriteLine("+");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.SetCursorPosition(25, 25);
+            Console.WriteLine("Piece: " + piececounter);
+            Console.SetCursorPosition(25, 22);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Score: 0");
+            Console.SetCursorPosition(3, 22);
+            Console.WriteLine("Next Piece: ");
+
+
+
+
+            Console.SetCursorPosition(48, 10);
+            string gameover = ".G A M E  O V E R.";
+
+
+
+
+
+            bool flag1 = true;
+            int counter = 0;
+
+
+
+
+
+            while (true)//MAİN GAME LOOP
+            {
+
+                bool flag = true;
+
+
+
+
+
+                while (flag1) //NEXT PIECE
+                {
+                    b = rnd.Next(0, 2);
+                    b1 = rnd.Next(0, 10);
+                    b2 = rnd.Next(0, 2);
+                    b3 = rnd.Next(0, 2);
+                    b4 = rnd.Next(0, 2);
+                    int cursorx1 = 3;
+                    int cursory1 = 24;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.SetCursorPosition(3, 22);
+                    Console.WriteLine("Next Piece: ");
+
+
+                    Console.SetCursorPosition(cursorx1, cursory1);
+                    Console.WriteLine(" ");
+                    Console.SetCursorPosition(cursorx1 + 4, cursory1);
+                    Console.WriteLine(" ");
+                    Console.SetCursorPosition(cursorx1 + 8, cursory1);
+                    Console.WriteLine(" ");
+                    Console.SetCursorPosition(cursorx1 + 4, cursory1 + 2);
+                    Console.WriteLine(" ");
+                    Console.SetCursorPosition(cursorx1, cursory1 + 2);
+                    Console.WriteLine(" ");
+                    Console.SetCursorPosition(cursorx1, cursory1 + 4);
+                    Console.WriteLine(" ");
+
+
+
+                    if (numbers[b1] == 0) //x
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[b];
+                        Console.SetCursorPosition(cursorx1, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                    }
+                    if (numbers[b1] == 1)//xx
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[b];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[b2];
+                        Console.SetCursorPosition(cursorx1, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                        Console.SetCursorPosition(cursorx1 + 4, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+                    }
+                    if (numbers[b1] == 2) //BOTTOM BOTTOM XX
+
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[b];
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces1[b2];
+                        Console.SetCursorPosition(cursorx1, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                        Console.SetCursorPosition(cursorx1, cursory1 + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                    }
+
+                    if (numbers[b1] == 3) //xxx
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[b];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[b2];
+                        rtable[(cursorx - 3) / 4 + 2, (cursory - 2) / 2] = pieces2[b3];
+                        Console.SetCursorPosition(cursorx1, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                        Console.SetCursorPosition(cursorx1 + 4, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+                        Console.SetCursorPosition(cursorx1 + 8, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 2, (cursory - 2) / 2]);
+                    }
+                    if (numbers[b1] == 4) //BOTTOM BOTTOM XXX
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[b];
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces1[b2];
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 2] = pieces2[b3];
+                        Console.SetCursorPosition(cursorx1, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                        Console.SetCursorPosition(cursorx1, cursory1 + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                        Console.SetCursorPosition(cursorx1, cursory1 + 4);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 2]);
+
+                    }
+                    if (numbers[b1] == 5) //xx\nx
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[b];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[b2];
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces2[b3];
+                        Console.SetCursorPosition(cursorx1, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                        Console.SetCursorPosition(cursorx1 + 4, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                        Console.SetCursorPosition(cursorx1, cursory1 + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+                    }
+                    if (numbers[b1] == 6) //xx
+                    {//                      X
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[b];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[b2];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] = pieces2[b3];
+                        Console.SetCursorPosition(cursorx1, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+
+                        Console.SetCursorPosition(cursorx1 + 4, cursory1);
+
+
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                        Console.SetCursorPosition(cursorx1 + 4, cursory1 + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                    }
+                    if (numbers[b1] == 7) //x\nxx
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[b];
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces1[b2];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] = pieces2[b3];
+                        Console.SetCursorPosition(cursorx1, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                        Console.SetCursorPosition(cursorx1, cursory1 + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+
+
+                        Console.SetCursorPosition(cursorx1 + 4, cursory1 + 2);
+
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                    }
+                    if (numbers[b1] == 8) // x\nxx
+                    {
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces[b];
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces1[b2];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] = pieces2[b3];
+                        Console.SetCursorPosition(cursorx1, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                        Console.SetCursorPosition(cursorx1, cursory1 + 2);
+
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                        Console.SetCursorPosition(cursorx1 + 4, cursory1 + 2);
+
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+
+                    }
+
+                    if (numbers[b1] == 9) //xx\nxx
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[b];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[b2];
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces2[b3];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] = pieces3[b4];
+                        Console.SetCursorPosition(cursorx1, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                        Console.SetCursorPosition(cursorx1 + 4, cursory1);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                        Console.SetCursorPosition(cursorx1, cursory1 + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                        Console.SetCursorPosition(cursorx1 + 4, cursory1 + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+
+                    }
+                    flag1 = false;
+
+                }
+                
+
+                    
+
+                if (counter < 1)
+                    flag1 = false;
+
+                else
+                    flag1 = true;
+                if (Console.KeyAvailable)
+                {       // true: there is a key in keyboard buffer
+                    cki = Console.ReadKey(true);       // true: do not write character 
+
+
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                    Console.SetCursorPosition(cursorx, cursory);
+
+
+
+
+                    if (cki.Key == ConsoleKey.RightArrow && cursorx < 35)
+                    {   // key and boundary control
+
+                        if (piececounter == 0)
+                            piececounter++;
+
+
+                        Console.ForegroundColor = ConsoleColor.White;
+
+
+
+                        if (numbers[a1] == 0) //X
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                        }
+                        if (numbers[a1] == 1)//xx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+                        }
+
+                        if (numbers[a1] == 2) //BOTTOM BOTTOM XX
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                        }
+
+                        if (numbers[a1] == 3) //xxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx + 8, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 2, (cursory - 2) / 2]);
+
+                        }
+                        if (numbers[a1] == 4) //BOTTOM BOTTOM xxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx, cursory + 4);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 2]);
+
+
+                        }
+                        if (numbers[a1] == 5) //xx\nx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                        }
+                        if (numbers[a1] == 6) //xx\n x
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                        }
+                        if (numbers[a1] == 7) //x\nxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                        }
+                        if (numbers[a1] == 8) // x\nxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                        }
+
+                        if (numbers[a1] == 9) //xx\nxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+
+
+                        }
+
+
+
+
+
+
+
+                        cursorx += 4;
+                    }
+                    //MOVİNG PİECE
+                    if (cki.Key == ConsoleKey.LeftArrow && cursorx > 3)//MOVE LEFT
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+
+
+                        if (piececounter == 0)
+                            piececounter++;
+                        if (numbers[a1] == 0)
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                        }
+                        if (numbers[a1] == 1)//xx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+                        }
+
+                        if (numbers[a1] == 2) //alt alta xx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                        }
+
+                        if (numbers[a1] == 3) //xxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx + 8, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 2, (cursory - 2) / 2]);
+
+                        }
+                        if (numbers[a1] == 4) //alt alta xxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx, cursory + 4);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 2]);
+
+
+                        }
+                        if (numbers[a1] == 5) //xx\nx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                        }
+                        if (numbers[a1] == 6) //xx\n x
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                        }
+                        if (numbers[a1] == 7) //x\nxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                        }
+                        if (numbers[a1] == 8) // x\nxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                        }
+
+                        if (numbers[a1] == 9) //xx\nxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+
+
+                        }
+
+
+
+
+
+
+
+
+
+                        cursorx -= 4;
+                    }
+                    if (cki.Key == ConsoleKey.UpArrow && cursory > 3)//MOVE UP
+                    {
+                        if (piececounter == 0)
+                            piececounter++;
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.SetCursorPosition(48, 10);
+                        Console.WriteLine("                                        ");
+                        Console.SetCursorPosition(48, 11);
+                        Console.WriteLine("                                        ");
+                        Console.SetCursorPosition(48, 12);
+                        Console.WriteLine("                                        ");
+                        Console.SetCursorPosition(48, 13);
+                        Console.WriteLine("                                        ");
+                        Console.SetCursorPosition(48, 14);
+                        Console.WriteLine("                                        ");
+
+
+                        if (numbers[a1] == 0)
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                        }
+                        if (numbers[a1] == 1)//xx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+                        }
+
+                        if (numbers[a1] == 2) //alt alta xx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                        }
+
+                        if (numbers[a1] == 3) //xxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx + 8, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 2, (cursory - 2) / 2]);
+
+                        }
+                        if (numbers[a1] == 4) //alt alta xxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx, cursory + 4);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 2]);
+
+
+                        }
+                        if (numbers[a1] == 5) //xx\nx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                        }
+                        if (numbers[a1] == 6) //xx\n x
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                        }
+                        if (numbers[a1] == 7) //x\nxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                        }
+                        if (numbers[a1] == 8) // x\nxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                        }
+
+                        if (numbers[a1] == 9) //xx\nxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+
+
+                        }
+
+
+
+
+
+
+
+
+
+                        cursory -= 2;
+                    }
+                    if (cki.Key == ConsoleKey.DownArrow && cursory < 18)//MOVE DOWN
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                        if (piececounter == 0)
+                            piececounter++;
+
+
+                        if (numbers[a1] == 0)
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                        }
+                        if (numbers[a1] == 1)//xx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+                        }
+
+                        if (numbers[a1] == 2) //alt alta xx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                        }
+
+                        if (numbers[a1] == 3) //xxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx + 8, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 2, (cursory - 2) / 2]);
+
+                        }
+                        if (numbers[a1] == 4) //alt alta xxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx, cursory + 4);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 2]);
+
+
+                        }
+                        if (numbers[a1] == 5) //xx\nx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                        }
+                        if (numbers[a1] == 6) //xx\n x
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                        }
+                        if (numbers[a1] == 7) //x\nxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                        }
+                        if (numbers[a1] == 8) // x\nxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                        }
+
+                        if (numbers[a1] == 9) //xx\nxx
+                        {
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+
+
+                        }
+
+
+
+
+
+
+
+
+
+
+                        cursory += 2;
+                    }
+
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.SetCursorPosition(25, 25);
+                    Console.WriteLine("Piece: " + piececounter);
+
+
+
+
+
+
+                    Console.SetCursorPosition(cursorx, cursory); // refresh  (current position)
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    if (numbers[a1] == 0) //x
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+                        Console.SetCursorPosition(cursorx, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                    }
+                    if (numbers[a1] == 1)//xx
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[a2];
+                        Console.SetCursorPosition(cursorx, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                        Console.SetCursorPosition(cursorx + 4, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+                    }
+
+                    if (numbers[a1] == 2) //BOTTOM BOTTOM xx
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces1[a2];
+                        Console.SetCursorPosition(cursorx, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                        Console.SetCursorPosition(cursorx, cursory + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                    }
+
+                    if (numbers[a1] == 3) //xxx
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[a2];
+                        rtable[(cursorx - 3) / 4 + 2, (cursory - 2) / 2] = pieces2[a3];
+                        Console.SetCursorPosition(cursorx, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                        Console.SetCursorPosition(cursorx + 4, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+                        Console.SetCursorPosition(cursorx + 8, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 2, (cursory - 2) / 2]);
+                    }
+                    if (numbers[a1] == 4) //BOTTOM BOTTOM xxx
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces1[a2];
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 2] = pieces2[a3];
+                        Console.SetCursorPosition(cursorx, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                        Console.SetCursorPosition(cursorx, cursory + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                        Console.SetCursorPosition(cursorx, cursory + 4);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 2]);
+
+                    }
+                    if (numbers[a1] == 5) //xx
+                                          //x.
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[a2];
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces2[a3];
+
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] = table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1];
+
+
+                        Console.SetCursorPosition(cursorx, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                        Console.SetCursorPosition(cursorx + 4, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                        Console.SetCursorPosition(cursorx, cursory + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    }
+                    if (numbers[a1] == 6) //xx
+                                          //.x
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[a2];
+
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1];
+
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] = pieces2[a3];
+
+                        Console.SetCursorPosition(cursorx, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.SetCursorPosition(cursorx, cursory + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+
+                        Console.SetCursorPosition(cursorx + 4, cursory);
+
+
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                        Console.SetCursorPosition(cursorx + 4, cursory + 2);
+
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                    }
+                    if (numbers[a1] == 7) //x.
+                                          //xx
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2];
+
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces1[a2];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] = pieces2[a3];
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.SetCursorPosition(cursorx, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.SetCursorPosition(cursorx + 4, cursory);
+
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+
+                        Console.SetCursorPosition(cursorx, cursory + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+
+
+                        Console.SetCursorPosition(cursorx + 4, cursory + 2);
+
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                    }
+                    if (numbers[a1] == 8) //.x
+                                          //xx
+                    {
+
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = table[(cursorx - 3) / 4, (cursory - 2) / 2];
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces[a];
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces1[a2];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] = pieces2[a3];
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.SetCursorPosition(cursorx, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+
+                        Console.SetCursorPosition(cursorx + 4, cursory);
+
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                        Console.SetCursorPosition(cursorx, cursory + 2);
+
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+                        Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+
+                    }
+
+                    if (numbers[a1] == 9) //xx\nxx
+                    {
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[a2];
+                        rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces2[a3];
+                        rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] = pieces3[a4];
+                        Console.SetCursorPosition(cursorx, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                        Console.SetCursorPosition(cursorx + 4, cursory);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                        Console.SetCursorPosition(cursorx, cursory + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                        Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                        Console.WriteLine(rtable[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+
+                    }
+
+                    if (cki.Key == ConsoleKey.Enter)//COLLISION CONTROL AND SAVE TO ARRAY
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkCyan;
+
+
+                        if (numbers[a1] == 0)
+                        {
+
+                            if (table[(cursorx - 3) / 4, (cursory - 2) / 2] != ".")
+                            {
+                                do
+                                {
+                                    Console.SetCursorPosition(0, 20); ;
+                                    Console.WriteLine("Try Another Place,Press Any Arrow Key to Continue.");//ERROR MESSAGE
+                                    flag = false;
+                                    break;
+
+                                } while (flag);
+                            }
+                            else
+                            {
+
+                                Console.SetCursorPosition(0, 20); ;
+                                Console.WriteLine("               CORRECT!!                                                    ");
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];//SAVE ARRAY
+                                flag = true;
+                            }
+                        }
+
+                        if (numbers[a1] == 1)//xx
+                        {
+                        
+
+                            if (table[(cursorx - 3) / 4, (cursory - 2) / 2] != "." || table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] != ".")
+                            {
+                                do
+                                {
+                                    Console.SetCursorPosition(0, 20); ;
+                                    Console.WriteLine("Try Another Place,Press Any Arrow Key to Continue.");//ERROR MESAGE
+                                    flag = false;
+                                    break;
+
+                                } while (flag);
+                            }
+                            else
+                            {
+
+                                Console.SetCursorPosition(0, 20); ;
+                                Console.WriteLine("               CORRECT!!                                                    ");
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];//SAVİNG ARRAY
+                                table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[a2];
+                                flag = true;
+                            }
+
+                        }
+
+                        if (numbers[a1] == 2) //BOTTOM BOTTOM xx
+                        {
+
+                            if (table[(cursorx - 3) / 4, (cursory - 2) / 2] != "." || table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] != ".")
+                            {
+                                do
+                                {
+                                    Console.SetCursorPosition(0, 20); ;
+                                    Console.WriteLine("Try Another Place,Press Any Arrow Key to Continue.");
+                                    flag = false;
+                                    break;
+
+                                } while (flag);
+                            }
+                            else
+                            {
+
+                                Console.SetCursorPosition(0, 20); ;
+                                Console.WriteLine("               CORRECT!!                                                    ");
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces1[a2];
+                                flag = true;
+                            }
+                        }
+
+                        if (numbers[a1] == 3) //xxx
+                        {
+
+                            if (table[(cursorx - 3) / 4, (cursory - 2) / 2] != "." || table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] != "." || table[(cursorx - 3) / 4 + 2, (cursory - 2) / 2] != ".")
+                            {
+                                do
+                                {
+                                    Console.SetCursorPosition(0, 20); ;
+                                    Console.WriteLine("Try Another Place,Press Any Arrow Key to Continue.");
+                                    flag = false;
+                                    break;
+
+                                } while (flag);
+                            }
+                            else
+                            {
+
+                                Console.SetCursorPosition(0, 20); ;
+                                Console.WriteLine("               CORRECT!!                                                    ");
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+                                table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[a2];
+                                table[(cursorx - 3) / 4 + 2, (cursory - 2) / 2] = pieces2[a3];
+                                flag = true;
+                            }
+                        }
+
+                        if (numbers[a1] == 4) //BOTTOM BOTTOM xxx
+                        {
+
+                            if (table[(cursorx - 3) / 4, (cursory - 2) / 2] != "." || table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] != "." || table[(cursorx - 3) / 4, (cursory - 2) / 2 + 2] != "." || table[(cursorx - 3) / 4, (cursory - 2) / 2 + 2] != ".")
+                            {
+                                do
+                                {
+                                    Console.SetCursorPosition(0, 20); ;
+                                    Console.WriteLine("Try Another Place,Press Any Arrow Key to Continue.");
+                                    flag = false;
+                                    break;
+
+                                } while (flag);
+                            }
+                            else
+                            {
+
+                                Console.SetCursorPosition(0, 20); ;
+                                Console.WriteLine("               CORRECT!!                                                    ");
+
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces1[a2];
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2 + 2] = pieces2[a3];
+                                flag = true;
+                            }
+
+                        }
+
+                        if (numbers[a1] == 5) //xx\nx
+                        {
+
+                            if (table[(cursorx - 3) / 4, (cursory - 2) / 2] != "." || table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] != "." || table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] != ".")
+                            {
+                                do
+                                {
+                                    Console.SetCursorPosition(0, 20); ;
+                                    Console.WriteLine("Try Another Place,Press Any Arrow Key to Continue.");
+                                    flag = false;
+                                    break;
+
+                                } while (flag);
+                            }
+                            else
+                            {
+
+                                Console.SetCursorPosition(0, 20);
+                                Console.WriteLine("               CORRECT!!                                                    ");
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+                                table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[a2];
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces2[a3];
+                                flag = true;
+                            }
+
+
+                        }
+
+                        if (numbers[a1] == 6) //xx\n x
+                        {
+
+                            if (table[(cursorx - 3) / 4, (cursory - 2) / 2] != "." || table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] != "." || table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] != ".")
+                            {
+                                do
+                                {
+                                    Console.SetCursorPosition(0, 20); ;
+                                    Console.WriteLine("Try Another Place,Press Any Arrow Key to Continue.");
+                                    flag = false;
+                                    break;
+
+                                } while (flag);
+                            }
+                            else
+                            {
+
+                                Console.SetCursorPosition(0, 20); ;
+                                Console.WriteLine("               CORRECT!!                                                    ");
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+                                table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[a2];
+
+                                table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] = pieces2[a3];
+                                flag = true;
+                            }
+
+
+                        }
+
+                        if (numbers[a1] == 7) //x\nxx
+                        {
+
+                            if (table[(cursorx - 3) / 4, (cursory - 2) / 2] != "." || table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] != "." || table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] != ".")
+                            {
+                                do
+                                {
+                                    Console.SetCursorPosition(0, 20); ;
+                                    Console.WriteLine("Try Another Place,Press Any Arrow Key to Continue.");
+                                    flag = false;
+                                    break;
+
+                                } while (flag);
+                            }
+                            else
+                            {
+
+                                Console.SetCursorPosition(0, 20); ;
+                                Console.WriteLine("               CORRECT!!                                                    ");
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces1[a2];
+                                table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] = pieces2[a3];
+                            }
+                        }
+
+                        if (numbers[a1] == 8) // x\nxx
+                        {
+
+                            if (table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] != "." || table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] != "." || table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] != ".")
+                            {
+                                do
+                                {
+                                    Console.SetCursorPosition(0, 20); ;
+                                    Console.WriteLine("Try Another Place,Press Any Arrow Key to Continue.");
+                                    flag = false;
+                                    break;
+
+                                } while (flag);
+                            }
+                            else
+                            {
+
+                                Console.SetCursorPosition(0, 20); ;
+                                Console.WriteLine("               CORRECT!!                                                    ");
+                                table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces[a];
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces1[a2];
+                                table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] = pieces2[a3];
+                                flag = true;
+                            }
+
+
+                        }
+
+                        if (numbers[a1] == 9) //xx\nxx
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkCyan;
+
+                            if (table[(cursorx - 3) / 4, (cursory - 2) / 2] != "." || table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] != "." || table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] != "." || table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] != ".")
+                            {
+                                do
+                                {
+                                    Console.SetCursorPosition(0, 20); ;
+                                    Console.WriteLine("Try Another Place,Press Any Arrow Key to Continue.");
+                                    flag = false;
+                                    break;
+
+
+                                } while (flag);
+
+                            }
+                            else
+                            {
+
+                                Console.SetCursorPosition(0, 20); ;
+                                Console.WriteLine("               CORRECT!!                                                    ");
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2] = pieces[a];
+                                table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2] = pieces1[a2];
+                                table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1] = pieces2[a3];
+                                table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1] = pieces3[a4];
+                                flag = true;
+                            }
+                        }
+
+                        if (numbers[a1] == 0)//WRİTE
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                        }
+                        if (numbers[a1] == 1)//xx
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+                        }
+
+                        if (numbers[a1] == 2) //BOTTOM BOTTOM xx
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                        }
+
+                        if (numbers[a1] == 3) //xxx
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx + 8, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 2, (cursory - 2) / 2]);
+
+                        }
+                        if (numbers[a1] == 4) //BOTTOM BOTTOM xxx
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+                            Console.SetCursorPosition(cursorx, cursory + 4);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 2]);
+
+
+                        }
+                        if (numbers[a1] == 5) //xx\nx
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+
+
+                        }
+                        if (numbers[a1] == 6) //xx\n x
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+
+
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+
+                        }
+                        if (numbers[a1] == 7) //x\nxx
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+
+                        }
+                        if (numbers[a1] == 8) //.x\nxx
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+                        }
+
+                        if (numbers[a1] == 9) //xx\nxx
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.SetCursorPosition(cursorx, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2]);
+
+
+                            Console.SetCursorPosition(cursorx, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4, (cursory - 2) / 2 + 1]);
+
+
+                            Console.SetCursorPosition(cursorx + 4, cursory + 2);
+                            Console.WriteLine(table[(cursorx - 3) / 4 + 1, (cursory - 2) / 2 + 1]);
+
+
+
+                        }
+
+                        while (flag)
+                        {
+                            a = b;
+                            a1 = b1;
+                            a2 = b2;
+                            a3 = b3;
+                            a4 = b4;
+                            flag = false;
+                            flag1 = true;
+                            piececounter++;
+                        }
+                        Console.SetCursorPosition(25, 25);
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Piece: " + piececounter);
+
+
+                        double sumrow;
+                        double sumcolumn;
+                        int fullrow = 0;
+                        int fullcolumn = 0;
+                        int mycountercolumn = 0;
+                        int mycounterrow = 0;
+                        int mycounter3 = 0;
+                        int mycounter4 = 0;
+                        Console.SetCursorPosition(48, 9);
+                        Console.WriteLine("Calculations:");
+                        for (int i = 0; i < table.GetLength(0); i++) //sutun+satır sildirme
+                        {
+                            int mycounter1 = 0;
+                            int mycounter = 0;
+                            for (int j = 0; j < table.GetLength(1); j++)
+                            {
+                                if (table[i, j] != ".")
+                                {
+                                    mycounter++;
+                                    if (mycounter == 9) //COLOUMN
+                                    {
+                                        mycounter4++;
+                                        mycounter3++;
+                                        mycountercolumn++;
+                                        fullcolumn = i;
+                                        int value = 8;
+                                        double binary = 0;
+
+                                        for (int l = i; l < table.GetLength(0); l++) //CHANGE COLOUMN TO BİNARY AND DELETE
+                                        {
+
+                                            for (int k = 0; k < table.GetLength(1); k++)
+                                            {
+                                                binary += Convert.ToInt32(table[i, k]) * Math.Pow(10, value);
+                                                value--;
+                                            }
+
+                                        }
+
+                                        //BINARY TO DECIMAL//
+                                        int score = Convert.ToInt32(binary);
+                                        int binarycounter = 0;
+                                        int number = 0;
+                                        sumcolumn = 0;
+                                        while (score > 9)
+                                        {
+                                            number = score % 10;//finds the ones digit
+                                            score = score / 10;//one digit deleted form
+                                            sumcolumn += number * Math.Pow(2, binarycounter);
+                                            binarycounter++;
+                                        }
+                                        sumcolumn += score * Math.Pow(2, binarycounter);
+                                        point += sumcolumn;
+                                        Console.SetCursorPosition(48, 10 + mycounter4);
+                                        Console.WriteLine("(" + Convert.ToInt32(binary) + ")2" + " = " + "(" + sumcolumn + ")10");///////////////////////////////////////////////////////
+
+
+
+
+
+
+                                    }
+                                }
+
+
+                                if (table[j, i] != ".")
+                                {
+                                    mycounter1++;
+                                    int value = 8;
+                                    double binary = 0;
+                                    sumrow = 0;
+                                    if (mycounter1 == 9)
+                                    {
+                                        mycounter4++;
+                                        mycounter3++;
+                                        mycounterrow++;
+                                        fullrow = i;
+                                        for (int k = 0; k < table.GetLength(1); k++)//CONVERT TO STRING BINARY TO BINARY
+                                        {
+                                            binary += Convert.ToInt32(table[k, i]) * Math.Pow(10, value);
+                                            value--;
+
+                                        }
+
+                                        ////BINARY SCORE TO DECIMAL/////
+                                        int score = Convert.ToInt32(binary);
+                                        int binarycounter = 0;
+                                        int number = 0;
+
+                                        while (score > 9)
+                                        {
+                                            number = score % 10;//finds the ones digit
+
+                                            score = score / 10;//one digit deleted form
+                                            sumrow = sumrow + number * Math.Pow(2, binarycounter);
+                                            binarycounter++;
+                                        }
+                                        sumrow += score * Math.Pow(2, binarycounter);
+                                        point += sumrow;
+                                        Console.SetCursorPosition(48, 10 + mycounter4);
+                                        Console.WriteLine("(" + Convert.ToInt32(binary) + ")2" + " = " + "(" + sumrow + ")10");///////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+                                    }
+                                }
+
+
+
+                            }
+
+                        }
+
+
+                        double sumblock = 0;
+                        int mycounter2 = 0;
+
+                        for (int i = 0; i < 7; i += 3)
+                        {
+                            mycounter2 = 0;
+                            for (int j = 0; j < 3; j++)
+                            {
+                                if (table[i, j] != "." && table[i + 1, j] != "." && table[i + 2, j] != ".")
+                                    mycounter2++;
+                                if (mycounter2 == 3)
+                                {
+                                    mycounter4++;
+                                    mycounter3++;
+                                    int value = 8;
+                                    double binary = 0;
+                                    sumblock = 0;
+
+                                    //CONVERT TO STRING BINARY TO BINARY
+
+                                    int by = 0;
+                                    for (int l = 0; l < 3; l++)
+                                    {
+                                        binary += Convert.ToInt32(table[i, by]) * Math.Pow(10, value);
+                                        value--;
+                                        binary += Convert.ToInt32(table[i + 1, by]) * Math.Pow(10, value);
+                                        value--;
+                                        binary += Convert.ToInt32(table[i + 2, by]) * Math.Pow(10, value);
+                                        value--;
+                                        by++;
+
+                                    }
+
+
+
+                                    ////BINARY SCORE TO DECIMAL/////
+                                    int score = Convert.ToInt32(binary);
+                                    int binarycounter = 0;
+                                    int number = 0;
+
+                                    while (score > 9)
+                                    {
+                                        number = score % 10;//finds the ones digit
+
+                                        score = score / 10;//one digit deleted form
+                                        sumblock = sumblock + number * Math.Pow(2, binarycounter);
+                                        binarycounter++;
+                                    }
+                                    Console.SetCursorPosition(48, 10 + mycounter4);
+                                    sumblock += score * Math.Pow(2, binarycounter);
+                                    point += sumblock;
+                                    Console.WriteLine("(" + Convert.ToInt32(binary) + ")2" + " = " + "(" + sumblock + ")10");
+
+                                    by = 0;
+                                    for (int k = 0; k < 3; k++) //DELETE OLD FULL block
+                                    {
+                                        for (int l = i; l < i + 3; l++)
+                                        {
+                                            table[l, k] = ".";
+                                            Console.SetCursorPosition(4 * l + 3, 2 * k + 2);
+                                            Console.Write(table[l, k]);
+                                            Thread.Sleep(100);
+
+                                        }
+
+                                    }
+                                    break;
+
+
+                                }
+
+
+                            }
+                        }
+                        sumblock = 0;
+                        mycounter2 = 0;
+
+                        for (int i = 0; i < 7; i += 3)
+                        {
+                            mycounter2 = 0;
+                            for (int j = 3; j < 6; j++)
+                            {
+                                if (table[i, j] != "." && table[i + 1, j] != "." && table[i + 2, j] != ".")
+                                    mycounter2++;
+                                if (mycounter2 == 3)
+                                {
+                                    mycounter4++;
+                                    mycounter3++;
+                                    int value = 8;
+                                    double binary = 0;
+                                    sumblock = 0;
+
+                                    //CONVERT TO STRING BINARY TO BINARY
+
+                                    int by = 3;
+                                    for (int l = 0; l < 3; l++)
+                                    {
+                                        binary += Convert.ToInt32(table[i, by]) * Math.Pow(10, value);
+                                        value--;
+                                        binary += Convert.ToInt32(table[i + 1, by]) * Math.Pow(10, value);
+                                        value--;
+                                        binary += Convert.ToInt32(table[i + 2, by]) * Math.Pow(10, value);
+                                        value--;
+                                        by++;
+
+                                    }
+
+
+
+                                    ////BINARY SCORE TO DECIMAL/////
+                                    int score = Convert.ToInt32(binary);
+                                    int binarycounter = 0;
+                                    int number = 0;
+
+                                    while (score > 9)
+                                    {
+                                        number = score % 10;//finds the ones digit
+
+                                        score = score / 10;//one digit deleted form
+                                        sumblock = sumblock + number * Math.Pow(2, binarycounter);
+                                        binarycounter++;
+                                    }
+                                    sumblock += score * Math.Pow(2, binarycounter);
+                                    point += sumblock;
+                                    Console.SetCursorPosition(48, 10 + mycounter4);
+                                    Console.WriteLine("(" + Convert.ToInt32(binary) + ")2" + " = " + "(" + sumblock + ")10");
+
+                                    by = 0;
+                                    for (int k = 3; k < 6; k++) //DELETE OLD FULL block
+                                    {
+                                        for (int l = i; l < i + 3; l++)
+                                        {
+                                            table[l, k] = ".";
+                                            Console.SetCursorPosition(4 * l + 3, 2 * k + 2);
+                                            Console.Write(table[l, k]);
+                                            Thread.Sleep(100);
+
+                                        }
+
+                                    }
+                                    break;
+
+
+                                }
+
+
+                            }
+                        }
+
+                        sumblock = 0;
+                        mycounter2 = 0;
+
+                        for (int i = 0; i < 7; i += 3) //blocks
+                        {
+                            mycounter2 = 0;
+                            for (int j = 6; j < 9; j++)
+                            {
+                                if (table[i, j] != "." && table[i + 1, j] != "." && table[i + 2, j] != ".")
+                                    mycounter2++;
+                                if (mycounter2 == 3)
+                                {
+                                    mycounter4++;
+                                    mycounter3++;
+                                    int value = 8;
+                                    double binary = 0;
+                                    sumblock = 0;
+
+                                    //CONVERT TO STRING BINARY TO BINARY
+
+                                    int by = 6;
+                                    for (int l = 0; l < 3; l++)
+                                    {
+                                        binary += Convert.ToInt32(table[i, by]) * Math.Pow(10, value);
+                                        value--;
+                                        binary += Convert.ToInt32(table[i + 1, by]) * Math.Pow(10, value);
+                                        value--;
+                                        binary += Convert.ToInt32(table[i + 2, by]) * Math.Pow(10, value);
+                                        value--;
+                                        by++;
+
+                                    }
+
+
+
+                                    ////BINARY SCORE TO DECIMAL/////
+                                    int score = Convert.ToInt32(binary);
+                                    int binarycounter = 0;
+                                    int number = 0;
+
+                                    while (score > 9)
+                                    {
+                                        number = score % 10;//finds the ones digit
+
+                                        score = score / 10;//one digit deleted form
+                                        sumblock = sumblock + number * Math.Pow(2, binarycounter);
+                                        binarycounter++;
+                                    }
+                                    sumblock += score * Math.Pow(2, binarycounter);
+                                    point += sumblock;
+
+                                    Console.SetCursorPosition(48, 10 + mycounter4);
+                                    Console.WriteLine("(" + Convert.ToInt32(binary) + ")2" + " = " + "(" + sumblock + ")10");
+
+
+                                    by = 0;
+                                    for (int k = 6; k < 9; k++) //DELETE OLD FULL block
+                                    {
+                                        for (int l = i; l < i + 3; l++)
+                                        {
+                                            table[l, k] = ".";
+                                            Console.SetCursorPosition(4 * l + 3, 2 * k + 2);
+                                            Console.Write(table[l, k]);
+                                            Thread.Sleep(100);
+
+                                        }
+
+                                    }
+                                    break;
+
+
+                                }
+
+
+                            }
+                        }
+
+
+                        while (mycountercolumn > 0)
+                        {
+                            for (int k = 0; k < table.GetLength(1); k++)
+                            {
+                                table[fullcolumn, k] = ".";
+
+
+                                Console.SetCursorPosition(4 * fullcolumn + 3, (k * 2 + 2));
+                                Console.WriteLine(table[fullcolumn, k]);
+                                Thread.Sleep(100);
+                            }
+                            fullcolumn--;
+                            mycountercolumn--;
+                        }
+                        while (mycounterrow > 0)
+                        {
+                            for (int k = 0; k < table.GetLength(1); k++) //DELETE OLD FULL ROW
+                            {
+                                table[k, fullrow] = ".";
+
+
+                                Console.SetCursorPosition(4 * k + 3, 2 * fullrow + 2);
+                                Console.Write(table[k, fullrow]);
+                                Thread.Sleep(100);
+                            }
+                            fullrow--;
+                            mycounterrow--;
+                        }
+                        double temp;
+                        temp = point;
+                        if (mycounter3 > 1)
+                        {
+                            Console.SetCursorPosition(22, 22);
+                            Console.WriteLine(mycounter3 + "x");
+                            point = temp * mycounter3;
+                        }
+
+
+                        finalscore += point;
+                        point = 0;
+
+                        Console.SetCursorPosition(25, 22);
+                        Console.WriteLine("                         ");
+                        Console.SetCursorPosition(25, 22);
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Score: " + finalscore);
+
+
+
+
+
+
+
+                        cursorx = 19; cursory = 10;
+                    }
+
+
+
+
+
+                    //GAME OVER CONTROL
+
+                    bool game = false;
+                    if (numbers[a1] == 0)
+                    {
+                        for (int i = 0; i < 9; i++)
+                        {
+                            for (int z = 0; z < 9; z++)
+                            {
+                                if (table[i, z] == ".")
+                                {
+                                    game = true;
+                                    break;
+                                }
+
+                            }
+                        }
+                        if (game == false)
+                        {
+                            x = 48;
+                            y = 10;
+                            x11 = 48;
+                            y11 = 9;
+                            for (int i = 0; i < gameover.Length; i++)
+                            {
+                                Console.SetCursorPosition(x, y);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write(gameover[i]);
+
+                                Thread.Sleep(100);
+
+                                x11 += 2;
+
+                            }
+                        }
+                    }
+
+
+                    if (numbers[a1] == 1)//xx
+                    {
+                        for (int i = 0; i < 8; i++)
+                        {
+                            for (int z = 0; z < 9; z++)
+                            {
+                                if (table[i, z] == "." && table[i + 1, z] == ".")
+                                {
+                                    game = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (game == false)
+                        {
+                            x = 48;
+                            y = 10;
+                            x11 = 48;
+                            y11 = 9;
+                            for (int i = 0; i < gameover.Length; i++)
+                            {
+                                Console.SetCursorPosition(x, y);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write(gameover[i]);
+
+                                Thread.Sleep(100);
+
+                                x11 += 2;
+
+                            }
+                        }
+                    }
+
+
+                    if (numbers[a1] == 2)//bottom bottom xx
+                    {
+                        for (int i = 0; i < 9; i++)
+                        {
+                            for (int z = 0; z < 8; z++)
+                            {
+                                if (table[i, z] == "." && table[i, z + 1] == ".")
+                                {
+                                    game = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (game == false)
+                        {
+                            x = 48;
+                            y = 10;
+                            x11 = 48;
+                            y11 = 9;
+                            for (int i = 0; i < gameover.Length; i++)
+                            {
+                                Console.SetCursorPosition(x, y);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write(gameover[i]);
+
+                                Thread.Sleep(100);
+
+                                x11 += 2;
+
+                            }
+                        }
+                    }
+
+
+                    if (numbers[a1] == 3)//xxx
+                    {
+                        for (int i = 0; i < 7; i++)
+                        {
+                            for (int z = 0; z < 9; z++)
+                            {
+                                if (table[i, z] == "." && table[i + 1, z] == "." && table[i + 2, z] == ".")
+                                {
+                                    game = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (game == false)
+                        {
+                            x = 48;
+                            y = 10;
+                            x11 = 48;
+                            y11 = 9;
+                            for (int i = 0; i < gameover.Length; i++)
+                            {
+                                Console.SetCursorPosition(x, y);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write(gameover[i]);
+
+                                Thread.Sleep(100);
+
+                                x11 += 2;
+
+                            }
+                        }
+                    }
+
+
+                    if (numbers[a1] == 4)//bottom bottom xxx
+                    {
+                        for (int i = 0; i < 9; i++)
+                        {
+                            for (int z = 0; z < 7; z++)
+                            {
+                                if (table[i, z] == "." && table[i, z + 1] == "." && table[i, z + 2] == ".")
+                                {
+                                    game = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (game == false)
+                        {
+                            x = 48;
+                            y = 10;
+                            x11 = 48;
+                            y11 = 9;
+                            for (int i = 0; i < gameover.Length; i++)
+                            {
+                                Console.SetCursorPosition(x, y);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write(gameover[i]);
+
+                                Thread.Sleep(100);
+
+                                x11 += 2;
+
+                            }
+                        }
+                    }
+
+
+                    if (numbers[a1] == 5)//xx\nx
+                    {
+                        for (int i = 0; i < 8; i++)
+                        {
+                            for (int z = 0; z < 8; z++)
+                            {
+                                if (table[i, z] == "." && table[i + 1, z] == "." && table[i, z + 1] == ".")
+                                {
+                                    game = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (game == false)
+                        {
+                            x = 48;
+                            y = 10;
+                            x11 = 48;
+                            y11 = 9;
+                            for (int i = 0; i < gameover.Length; i++)
+                            {
+                                Console.SetCursorPosition(x, y);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write(gameover[i]);
+
+                                Thread.Sleep(100);
+
+                                x11 += 2;
+
+                            }
+                        }
+                    }
+
+
+                    if (numbers[a1] == 6)//xx\n x
+                    {
+                        for (int i = 0; i < 8; i++)
+                        {
+                            for (int z = 0; z < 8; z++)
+                            {
+                                if (table[i, z] == "." && table[i + 1, z] == "." && table[i + 1, z + 1] == ".")
+                                {
+                                    game = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (game == false)
+                        {
+                            x = 48;
+                            y = 10;
+                            x11 = 48;
+                            y11 = 9;
+                            for (int i = 0; i < gameover.Length; i++)
+                            {
+                                Console.SetCursorPosition(x, y);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write(gameover[i]);
+
+                                Thread.Sleep(100);
+
+                                x11 += 2;
+
+                            }
+                        }
+                    }
+
+
+                    if (numbers[a1] == 7)//x\nxx
+                    {
+                        for (int i = 0; i < 8; i++)
+                        {
+                            for (int z = 0; z < 8; z++)
+                            {
+                                if (table[i, z] == "." && table[i, z + 1] == "." && table[i + 1, z + 1] == ".")
+                                {
+                                    game = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (game == false)
+                        {
+                            x = 48;
+                            y = 10;
+                            x11 = 48;
+                            y11 = 9;
+                            for (int i = 0; i < gameover.Length; i++)
+                            {
+                                Console.SetCursorPosition(x, y);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write(gameover[i]);
+
+                                Thread.Sleep(100);
+
+                                x11 += 2;
+
+                            }
+                        }
+                    }
+
+
+                    if (numbers[a1] == 8)// x\nxx
+                    {
+                        for (int i = 0; i < 8; i++)
+                        {
+                            for (int z = 0; z < 8; z++)
+                            {
+                                if (table[i + 1, z] == "." && table[i, z + 1] == "." && table[i + 1, z + 1] == ".")
+                                {
+                                    game = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (game == false)
+                        {
+
+                            x11 = 48;
+                            y11 = 9;
+                            for (int i = 0; i < gameover.Length; i++)
+                            {
+                                Console.SetCursorPosition(x, y);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write(gameover[i]);
+
+                                Thread.Sleep(100);
+
+                                x11 += 2;
+
+                            }
+                        }
+                    }
+
+
+                    if (numbers[a1] == 9)//xx\nxx
+                    {
+                        for (int i = 0; i < 8; i++)
+                        {
+                            for (int z = 0; z < 8; z++)
+                            {
+                                if (table[i, z] == "." && table[i + 1, z] == "." && table[i, z + 1] == "." && table[i + 1, z + 1] == ".")
+                                {
+                                    game = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (game == false)
+                        {
+
+                            x11 = 48;
+                            y11 = 9;
+                            for (int i = 0; i < gameover.Length; i++)
+                            {
+                                Console.SetCursorPosition(x, y);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write(gameover[i]);
+
+                                Thread.Sleep(100);
+
+                                x11 += 2;
+
+                            }
+                        }
+                    }
+
+
+                    if (cki.Key == ConsoleKey.Escape) break;
+                }
+
+            }
+
+            Console.ReadLine();
+
+
+        }
+    }
+}
